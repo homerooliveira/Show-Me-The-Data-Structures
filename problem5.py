@@ -39,6 +39,19 @@ class Blockchain:
             previous_hash = self.chain.tail.value.hash
 
         self.chain.append(Block(data, previous_hash=previous_hash))
+    
+    def is_valid(self) -> bool:
+        if len(self.chain) <= 1:
+            return True
+
+        current = self.chain.head
+
+        while current.next is not None:
+            if current.next.value.previous_hash != current.value.hash:
+                return False
+            current = current.next
+
+        return True
 
     def __repr__(self) -> str:
         return str(self.chain)
@@ -47,5 +60,7 @@ if __name__ == "__main__":
     blockchain = Blockchain()
     blockchain.add("test with string")
     blockchain.add("test with string")
+    blockchain.add("test with string")
 
     pprint(list(blockchain.chain))
+    print(blockchain.is_valid())
