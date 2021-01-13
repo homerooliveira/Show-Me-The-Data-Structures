@@ -22,6 +22,9 @@ class _Entry(Generic[K, V]):
 
 @final
 class LRUCache(Generic[K, V]):
+    """
+    Implementation based on `https://krishankantsinghal.medium.com/my-first-blog-on-medium-583159139237`
+    """
 
     _head: Optional[_Entry[K, V]]
     _tail: Optional[_Entry[K, V]]
