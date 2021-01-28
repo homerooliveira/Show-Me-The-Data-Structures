@@ -1,17 +1,17 @@
 from typing import Dict, Generic, Optional, TypeVar, final
 
 
-K = TypeVar('K')
-V = TypeVar('V')
+_K = TypeVar('_K')
+_V = TypeVar('_V')
 
 @final
-class _Entry(Generic[K, V]):
-    next: Optional['_Entry[K, V]']
-    previous: Optional['_Entry[K, V]']
-    key: K
-    value: V
+class _Node(Generic[_K, _V]):
+    next: Optional['_Node[_K, _V]']
+    previous: Optional['_Node[_K, _V]']
+    key: _K
+    value: _V
 
-    def __init__(self, key: K, value: V):
+    def __init__(self, key: _K, value: _V):
         self.key = key
         self.value = value
         self.next = None
@@ -21,14 +21,14 @@ class _Entry(Generic[K, V]):
         return f"[key={self.key}, value={self.value}]"
 
 @final
-class LRUCache(Generic[K, V]):
+class LRUCache(Generic[_K, _V]):
     """
     Implementation based on `https://krishankantsinghal.medium.com/my-first-blog-on-medium-583159139237`
     """
 
-    _head: Optional[_Entry[K, V]]
-    _tail: Optional[_Entry[K, V]]
-    _dict: Dict[K, _Entry[K, V]]
+    _head: Optional[_Node[_K, _V]]
+    _tail: Optional[_Node[_K, _V]]
+    _dict: Dict[_K, _Node[_K, _V]]
     capacity: int
 
     def __init__(self, capacity: int):
@@ -36,85 +36,71 @@ class LRUCache(Generic[K, V]):
         self._tail = None
         self._dict = {}
         self.capacity = capacity
-        if self.capacity < 1:
-            raise ValueError('Capacity must be at least 1')
 
-    def get(self, key: K) -> Optional[V]:
+    def get(self, key: _K) -> Optional[_V]:
         if key not in self._dict:
             return None
 
-        entry = self._dict[key]
+        node = self._dict[key]
         
-        if entry is not self._head:
-            self._remove(entry)
-            self._add_first(entry)
+        if node is not self._head:
+            self._remove(node)
+            self._add_first(node)
         
-        return entry.value
+        return node.value
 
-    def set(self, key: K, value: V):
+    def set(self, key: _K, value: _V):
+        if self.capacity == 0:
+            return
+
         if key in self._dict:
-            entry = self._dict[key]
-            entry.value = value
-            self._remove(entry)
-            self._add_first(entry)
+            node = self._dict[key]
+            node.value = value
+            self._remove(node)
+            self._add_first(node)
         else:
-            entry = _Entry(key, value)
+            node = _Node(key, value)
             if len(self._dict) == self.capacity:
-                del self._dict[self._tail.key]
-                self._remove(self._tail)
-            self._add_first(entry)
-            self._dict[key] = entry
+                del self._dict[self._tail.key] # type: ignore
+                self._remove(self._tail) # type: ignore
+            self._add_first(node)
+            self._dict[key] = node
 
-    def _add_first(self, entry: _Entry[K, V]):
-        entry.previous = None
+    def _add_first(self, node: _Node[_K, _V]):
+        node.previous = None
 
         if self._head is None:
-            self._head = entry
-            self._tail = entry
+            self._head = node
+            self._tail = node
         else:
-            entry.next = self._head
-            self._head.previous = entry
-            self._head = entry
+            node.next = self._head
+            self._head.previous = node
+            self._head = node
 
-    def _remove(self, entry: _Entry[K, V]):
-        if entry.previous:
-            entry.previous.next = entry.next
+    def _remove(self, node: _Node[_K, _V]):
+        if node.previous:
+            node.previous.next = node.next
         else:
-            self._head = entry.next
+            self._head = node.next
 
-        if entry.next:
-            entry.next.previous = entry.previous
+        if node.next:
+            node.next.previous = node.previous
         else:
-            self._tail = entry.previous
-    
-    def print(self):
-        current = self._head
+            self._tail = node.previous
 
-        while current:
-            print(current, end=" ")
-            current = current.next
-        print()
-
-        current = self._tail
-        while current:
-            print(current, end=" ")
-            current = current.previous
-
-        print()
 if __name__ == "__main__":
-    our_cache: LRUCache[int, int] = LRUCache(0)
+    our_cache: LRUCache[int, int] = LRUCache(5)
 
     our_cache.set(1, 1)
     our_cache.set(2, 2)
     our_cache.set(3, 3)
     our_cache.set(4, 4)
 
-    our_cache.get(1)       # returns 1
-    our_cache.get(2)       # returns 2
-    our_cache.get(9)      # returns -1 because 9 is not present in the cache
+    print(our_cache.get(1))       # returns 1
+    print(our_cache.get(2))       # returns 2
+    print(our_cache.get(9))      # returns -1 because 9 is not present in the cache
 
     our_cache.set(5, 5)
     our_cache.set(6, 6)
 
-    our_cache.get(3)
-    our_cache.print()
+    print(our_cache.get(3))  # returns -1 because the cache reached it's capacity and 3 was the least recently used entry

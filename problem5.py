@@ -18,11 +18,11 @@ class Block:
     def calc_hash(self) -> str:
         sha = hashlib.sha256()
 
-        hash_str = self.data.encode('utf-8')
+        hash_str: bytes = self.data.encode('utf-8')
         hash_str += self.timestamp.strftime("%Y-%m-%dT%H:%M:%S.%f%Z").encode('utf-8')
 
-        if self.previous_hash:
-            hash_str += self.previous_hash.encode('utf-8')
+        if previous_hash := self.previous_hash:
+            hash_str += previous_hash.encode('utf-8')
 
         sha.update(hash_str)
 
@@ -30,7 +30,10 @@ class Block:
 
 @final
 class Blockchain:
-    chain: LinkedList[Block] = LinkedList()
+    chain: LinkedList[Block]
+
+    def __init__(self):
+        self.chain = LinkedList()
 
     def add(self, data: str):
         previous_hash: Optional[str] = None
@@ -41,15 +44,15 @@ class Blockchain:
         self.chain.append(Block(data, previous_hash=previous_hash))
     
     def is_valid(self) -> bool:
-        if len(self.chain) <= 1:
-            return True
-
         current = self.chain.head
 
-        while current.next is not None:
-            if current.next.value.previous_hash != current.value.hash:
+        if current is None:
+            return True
+
+        while next := current.next: # type: ignore
+            if next.value.previous_hash != current.value.hash: # type: ignore
                 return False
-            current = current.next
+            current = current.next # type: ignore
 
         return True
 
