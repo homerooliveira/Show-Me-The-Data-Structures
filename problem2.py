@@ -26,8 +26,9 @@ def find_files(suffix: str, path: str) -> List[str]:
     elif os.path.isdir(path):
         for subpath in os.listdir(path):
             paths.extend(find_files(suffix, os.path.join(path, subpath)))
-    
+
     return paths
+
 
 if __name__ == "__main__":
     pprint.pprint(find_files(".c", "./testdir"))

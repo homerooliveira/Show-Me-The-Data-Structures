@@ -9,7 +9,7 @@ class TestLRUCache(unittest.TestCase):
         cache = LRUCache[int, int](1)
         cache.set(1, 1)
         self.assertEqual(cache.get(1), 1)
-    
+
     def test_cache_when_capacity_is_full(self):
         cache = LRUCache[int, int](1)
         cache.set(1, 1)
@@ -27,5 +27,6 @@ class TestLRUCache(unittest.TestCase):
         self.assertEqual(cache.get(2), None)
         self.assertEqual(cache.get(1), None)
 
-if __name__ == '__main__':
+
+if __name__ == "__main__":
     unittest.main()

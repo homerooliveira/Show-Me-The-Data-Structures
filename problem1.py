@@ -1,13 +1,14 @@
 from typing import Dict, Generic, Optional, TypeVar, final
 
 
-_K = TypeVar('_K')
-_V = TypeVar('_V')
+_K = TypeVar("_K")
+_V = TypeVar("_V")
+
 
 @final
 class _Node(Generic[_K, _V]):
-    next: Optional['_Node[_K, _V]']
-    previous: Optional['_Node[_K, _V]']
+    next: Optional["_Node[_K, _V]"]
+    previous: Optional["_Node[_K, _V]"]
     key: _K
     value: _V
 
@@ -19,6 +20,7 @@ class _Node(Generic[_K, _V]):
 
     def __repr__(self):
         return f"[key={self.key}, value={self.value}]"
+
 
 @final
 class LRUCache(Generic[_K, _V]):
@@ -42,15 +44,15 @@ class LRUCache(Generic[_K, _V]):
             return None
 
         node = self._dict[key]
-        
+
         if node is not self._head:
             self._remove(node)
             self._add_first(node)
-        
+
         return node.value
 
     def set(self, key: _K, value: _V):
-        if self.capacity == 0:
+        if self.capacity <= 0:
             return
 
         if key in self._dict:
@@ -61,8 +63,8 @@ class LRUCache(Generic[_K, _V]):
         else:
             node = _Node(key, value)
             if len(self._dict) == self.capacity:
-                del self._dict[self._tail.key] # type: ignore
-                self._remove(self._tail) # type: ignore
+                del self._dict[self._tail.key]  # type: ignore
+                self._remove(self._tail)  # type: ignore
             self._add_first(node)
             self._dict[key] = node
 
@@ -88,6 +90,7 @@ class LRUCache(Generic[_K, _V]):
         else:
             self._tail = node.previous
 
+
 if __name__ == "__main__":
     our_cache: LRUCache[int, int] = LRUCache(5)
 
@@ -96,11 +99,13 @@ if __name__ == "__main__":
     our_cache.set(3, 3)
     our_cache.set(4, 4)
 
-    print(our_cache.get(1))       # returns 1
-    print(our_cache.get(2))       # returns 2
-    print(our_cache.get(9))      # returns -1 because 9 is not present in the cache
+    print(our_cache.get(1))  # returns 1
+    print(our_cache.get(2))  # returns 2
+    print(our_cache.get(9))  # returns -1 because 9 is not present in the cache
 
     our_cache.set(5, 5)
     our_cache.set(6, 6)
 
-    print(our_cache.get(3))  # returns -1 because the cache reached it's capacity and 3 was the least recently used entry
+    print(
+        our_cache.get(3)
+    )  # returns -1 because the cache reached it's capacity and 3 was the least recently used entry

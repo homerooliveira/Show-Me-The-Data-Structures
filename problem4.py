@@ -1,9 +1,10 @@
 from typing import List, final
 
+
 @final
 class Group:
     name: str
-    groups: List['Group']
+    groups: List["Group"]
     users: List[str]
 
     def __init__(self, _name: str):
@@ -11,13 +12,13 @@ class Group:
         self.groups = []
         self.users = []
 
-    def add_group(self, group: 'Group'):
+    def add_group(self, group: "Group"):
         self.groups.append(group)
 
     def add_user(self, user: str):
         self.users.append(user)
 
-    def get_groups(self) -> List['Group']:
+    def get_groups(self) -> List["Group"]:
         return self.groups
 
     def get_users(self) -> List[str]:
@@ -25,6 +26,7 @@ class Group:
 
     def get_name(self) -> str:
         return self.name
+
 
 def is_user_in_group(user: str, group: Group) -> bool:
     """
@@ -44,7 +46,8 @@ def is_user_in_group(user: str, group: Group) -> bool:
             return True
 
     return False
-    
+
+
 if __name__ == "__main__":
     parent = Group("parent")
     child = Group("child")

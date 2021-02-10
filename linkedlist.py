@@ -1,11 +1,12 @@
 from typing import Generic, Iterable, Iterator, List, Optional, Sized, TypeVar, final
 
 
-T = TypeVar('T')
+T = TypeVar("T")
+
 
 @final
 class Node(Generic[T]):
-    next: Optional['Node[T]']
+    next: Optional["Node[T]"]
     value: T
 
     def __init__(self, value: T):
@@ -37,25 +38,25 @@ class LinkedList(Iterable[T], Sized, Generic[T]):
             self.tail = node
 
         self.size += 1
-    
+
     def __iter__(self) -> Iterator[T]:
         current = self.head
 
         while current is not None:
             yield current.value
             current = current.next
-    
+
     def __len__(self) -> int:
         return self.size
-    
+
     def __str__(self) -> str:
         return " -> ".join([str(value) for value in self])
 
     @classmethod
-    def fromlist(cls, list: List[T]) -> 'LinkedList[T]':
+    def fromlist(cls, list: List[T]) -> "LinkedList[T]":
         linked_list: LinkedList[T] = cls()
 
         for value in list:
             linked_list.append(value)
-        
+
         return linked_list
