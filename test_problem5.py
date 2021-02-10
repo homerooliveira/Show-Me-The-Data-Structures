@@ -19,6 +19,13 @@ class TestBlockchain(unittest.TestCase):
 
         self.assertEqual(len(blockchain.chain), 0)
 
+    def test_add_blockchain_with_large_string(self):
+        blockchain = Blockchain()
+
+        blockchain.add("dhsiauhduahduiahdisauhdiausgfouasgfiausfuoasgfuiasfuoasfhoasuhfoasuhfoaushfaosuhfaosfhasouhfsaouhfaosuhfoasuhfoasuhfoasu")
+
+        self.assertEqual(len(blockchain.chain), 1)
+
 
 if __name__ == "__main__":
     unittest.main()
