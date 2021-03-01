@@ -38,7 +38,7 @@ def huffman_encoding(data: str) -> Tuple[str, _Node]:
 
     binaryStr = "".join(map(lambda x: codes.get(x, ""), data))
 
-    return (binaryStr, nodes[0])
+    return (binaryStr, nodes[0]) #type: ignore
 
 
 def _create_codes(codes: Dict[str, str], node: Optional[_Node], binaryStr: str):
