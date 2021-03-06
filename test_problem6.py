@@ -54,7 +54,7 @@ class TestIntersection(unittest.TestCase):
     def test_intersection_without_intersected_values(self):
         element_1 = [3, 2, 4, 35, 6, 65, 6, 4, 3, 23]
         element_2 = [1, 7, 8, 9, 11, 21, 1]
-        expected = []
+        expected: List[int] = []
 
         linked_list_1: LinkedList[int] = LinkedList.fromlist(element_1)
         linked_list_2: LinkedList[int] = LinkedList.fromlist(element_2)
