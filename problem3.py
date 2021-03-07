@@ -38,7 +38,7 @@ def huffman_encoding(data: str) -> Tuple[str, _Node]:
 
     binaryStr = "".join(map(lambda x: codes.get(x, ""), data))
 
-    return (binaryStr, nodes[0]) #type: ignore
+    return (binaryStr, nodes[0])
 
 
 def _create_codes(codes: Dict[str, str], node: Optional[_Node], binaryStr: str):
@@ -85,8 +85,8 @@ def _find_code(data: str, node: Optional[_Node]) -> Optional[str]:
 
 
 if __name__ == "__main__":
-    # a_great_sentence = "The bird is the word"
-    a_great_sentence = "AA"
+    a_great_sentence = "The bird is the word"
+    # a_great_sentence = "AA"
 
     print("The size of the data is: {}\n".format(sys.getsizeof(a_great_sentence)))
     print("The content of the data is: {}\n".format(a_great_sentence))
